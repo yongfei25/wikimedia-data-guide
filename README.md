@@ -9,30 +9,30 @@ Guide to store and analyze Wikimedia data locally.
 ## Wikipedia
 ### 1. Download Wikipedia data dumps
 ```bash
-mkdir -p zhwiki && cd zhwiki
-wget -i zhwiki.links
+export $DATADIR=data
+export $WIKI=zhwiki
+mkdir -p $DATADIR/$WIKI && cd $DATADIR/$WIKI
+wget -i $WIKI.links
 ```
 
 ### 2. Install `mediawiki-tools-mwdumper`
 ```bash
 git clone git@github.com:wikimedia/mediawiki-tools-mwdumper.git
-mvn package
+cd mediawiki-tools-mwdumper && mvn package && cd ..
 ```
 
 ### 3. Start `Mysql` server with `docker-compose`
 ```bash
-mkdir -p /data/mysql
-rm /data/mysql/* -y
 docker-compose -f docker-compose-mysql.yml up -d
 ```
 
 ### 3. Load data into `zhwiki` database
 ```bash
 # Load page articles
-java -jar ../../mediawiki-tools-mwdumper/target/mwdumper-1.25.jar \
+java -jar mediawiki-tools-mwdumper/target/mwdumper-1.25.jar \
 --format=mysql:1.25 \
-~/storage1/wikipedia/zh/zhwiki-20170801-pages-articles1.xml.bz2 | \
-mysql -h 127.0.0.1 -u dataUser -pdataUserPassword zhwiki
+~$DATADIR/$WIKI/$WIKI-20170801-pages-articles1.xml.bz2 | \
+mysql -h 127.0.0.1 -u dataUser -pdataUserPassword $WIKI
 
 ## TODO
 # Load the rest of the databases
