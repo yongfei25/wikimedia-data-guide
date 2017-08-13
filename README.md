@@ -2,18 +2,27 @@
 
 Guide to store and analyze Wikimedia data locally.
 
+## Dependencies
+- Docker Compose
+- Java
+- Mvn
+- Mysql client
+
 ## TODO
-- [ ] Wikipedia database
+- [x] Wikipedia database
 - [ ] Wikipedia search index
 
 ## Wikipedia
 ### 1. Download Wikipedia data dumps
 ```bash
-export $DATADIR=data
-export $WIKI=zhwiki
-mkdir -p $DATADIR/$WIKI && cd $DATADIR/$WIKI
-wget -i $WIKI.links
+export DATADIR=data
+export WIKI=zhwiki
+wget -i $WIKI.links -P $DATADIR/$WIKI
 ```
+Complete list of backup from Wikimedia:
+
+https://dumps.wikimedia.org/backup-index.html
+
 
 ### 2. Install `mediawiki-tools-mwdumper`
 ```bash
@@ -28,21 +37,35 @@ docker-compose -f docker-compose-mysql.yml up -d
 
 ### 3. Load data into `zhwiki` database
 ```bash
-# Load page articles
+# Load page articles, this populates the following tables:
+# page, text, revision, redirect
 java -jar mediawiki-tools-mwdumper/target/mwdumper-1.25.jar \
 --format=mysql:1.25 \
-~$DATADIR/$WIKI/$WIKI-20170801-pages-articles1.xml.bz2 | \
+$DATADIR/$WIKI/$WIKI-20170801-pages-articles1.xml.bz2 | \
 mysql -h 127.0.0.1 -u dataUser -pdataUserPassword $WIKI
 
-## TODO
-# Load the rest of the databases
+java -jar mediawiki-tools-mwdumper/target/mwdumper-1.25.jar \
+--format=mysql:1.25 \
+$DATADIR/$WIKI/$WIKI-20170801-pages-articles2.xml.bz2 | \
+mysql -h 127.0.0.1 -u dataUser -pdataUserPassword $WIKI
+
+java -jar mediawiki-tools-mwdumper/target/mwdumper-1.25.jar \
+--format=mysql:1.25 \
+$DATADIR/$WIKI/$WIKI-20170801-pages-articles3.xml.bz2 | \
+mysql -h 127.0.0.1 -u dataUser -pdataUserPassword $WIKI
+
+java -jar mediawiki-tools-mwdumper/target/mwdumper-1.25.jar \
+--format=mysql:1.25 \
+$DATADIR/$WIKI/$WIKI-20170801-pages-articles4.xml.bz2 | \
+mysql -h 127.0.0.1 -u dataUser -pdataUserPassword $WIKI
+
+# Load the rest SQL files
+zcat $DATADIR/$WIKI/*.sql.gz | mysql -h 127.0.0.1 -u dataUser -pdataUserPassword $WIKI
 ```
 
 ### 4. Querying the database
 ```bash
-# to connect to mysql, ensure you have mysql-client installed
-sudo apt-get install mysql-client -y
-mysql -h 127.0.0.1 -u dataUser -pdataUserPassword zhwiki
+mysql -h 127.0.0.1 -u dataUser -pdataUserPassword $WIKI
 mysql> select page_id, page_title from page limit 5;
 +---------+-----------------------------+
 | page_id | page_title                  |
