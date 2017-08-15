@@ -13,16 +13,17 @@ Guide to store and analyze Wikimedia data locally.
 - [ ] Wikipedia search index
 
 ## Wikipedia
+Instructions to download and load Wikipedia data into `mysql` database.
+
+- [Database layout](https://www.mediawiki.org/wiki/Manual:Database_layout)
+- [List of downloadable data from Wikimedia](https://dumps.wikimedia.org/backup-index.html)
+
 ### 1. Download Wikipedia data dumps
 ```bash
 export DATADIR=data
 export WIKI=zhwiki
 wget -i $WIKI.links -P $DATADIR/$WIKI
 ```
-Complete list of backup from Wikimedia:
-
-https://dumps.wikimedia.org/backup-index.html
-
 
 ### 2. Install `mediawiki-tools-mwdumper`
 ```bash
@@ -32,10 +33,12 @@ cd mediawiki-tools-mwdumper && mvn package && cd ..
 
 ### 3. Start `Mysql` server with `docker-compose`
 ```bash
-docker-compose -f docker-compose-mysql.yml up -d
+docker-compose -f docker-compose.yml up -d
 ```
 
 ### 3. Load data into `zhwiki` database
+This might take a really long time to complete.
+
 ```bash
 # Load page articles, this populates the following tables:
 # page, text, revision, redirect
@@ -60,11 +63,13 @@ $DATADIR/$WIKI/$WIKI-20170801-pages-articles4.xml.bz2 | \
 mysql -h 127.0.0.1 -u dataUser -pdataUserPassword $WIKI
 
 # Load the rest SQL files
-zcat $DATADIR/$WIKI/*.sql.gz | mysql -h 127.0.0.1 -u dataUser -pdataUserPassword $WIKI
+cd $DATADIR/$WIKI
+gunzip *.sql.gz
+find ./ -name '*.sql' | awk '{ print "source", $0 }' | mysql -h 127.0.0.1 -u root -prootUserPassword $WIKI
 ```
 
 ### 4. Querying the database
-```bash
+```sql
 mysql -h 127.0.0.1 -u dataUser -pdataUserPassword $WIKI
 mysql> select page_id, page_title from page limit 5;
 +---------+-----------------------------+

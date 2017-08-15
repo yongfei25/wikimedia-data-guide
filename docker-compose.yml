@@ -1,10 +1,10 @@
 version: '3.1'
 
 services:
-  db:
-    image: mysql:5.7
+  mariadb:
+    image: mariadb:10.0.29
     environment:
-      MYSQL_ROOT_PASSWORD: mysqlRootPassword
+      MYSQL_ROOT_PASSWORD: rootUserPassword
       MYSQL_USER: dataUser
       MYSQL_PASSWORD: dataUserPassword
     volumes:
@@ -12,3 +12,6 @@ services:
       - ./schemas:/docker-entrypoint-initdb.d
     ports:
       - 3306:3306
+
+    # Uncomment this to disable double write buffer, improve loading speed
+    # command: ["--innodb-doublewrite=0"]
