@@ -63,10 +63,10 @@ CREATE TABLE /*_*/user (
   -- conflicts. Spaces are allowed, and are _not_ converted
   -- to underscores like titles. See the User::newFromName() for
   -- the specific tests that usernames have to pass.
-  user_name varchar(255) binary NOT NULL default '',
+  user_name varchar(191) binary NOT NULL default '',
 
   -- Optional 'real name' to be displayed in credit listings
-  user_real_name varchar(255) binary NOT NULL default '',
+  user_real_name varchar(191) binary NOT NULL default '',
 
   -- Password hashes, see User::crypt() and User::comparePasswords()
   -- in User.php for the algorithm
@@ -240,7 +240,7 @@ CREATE TABLE /*_*/page (
 
   -- The rest of the title, as text.
   -- Spaces are transformed into underscores in title storage.
-  page_title varchar(255) binary NOT NULL,
+  page_title varchar(191) binary NOT NULL,
 
   -- Comma-separated set of permission keys indicating who
   -- can move or edit the page.
@@ -316,7 +316,7 @@ CREATE TABLE /*_*/revision (
   rev_user int unsigned NOT NULL default 0,
 
   -- Text username or IP address of the editor.
-  rev_user_text varchar(255) binary NOT NULL default '',
+  rev_user_text varchar(191) binary NOT NULL default '',
 
   -- Timestamp of when revision was created
   rev_timestamp binary(14) NOT NULL default '',
@@ -405,7 +405,7 @@ CREATE TABLE /*_*/archive (
   -- Primary key
   ar_id int unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   ar_namespace int NOT NULL default 0,
-  ar_title varchar(255) binary NOT NULL default '',
+  ar_title varchar(191) binary NOT NULL default '',
 
   -- Newly deleted pages will not store text in this table,
   -- but will reference the separately existing text rows.
@@ -418,7 +418,7 @@ CREATE TABLE /*_*/archive (
   -- Basic revision stuff...
   ar_comment varbinary(767) NOT NULL,
   ar_user int unsigned NOT NULL default 0,
-  ar_user_text varchar(255) binary NOT NULL,
+  ar_user_text varchar(191) binary NOT NULL,
   ar_timestamp binary(14) NOT NULL default '',
   ar_minor_edit tinyint NOT NULL default 0,
 
@@ -490,7 +490,7 @@ CREATE TABLE /*_*/pagelinks (
   -- and deletions may refer to different page records as time
   -- goes by.
   pl_namespace int NOT NULL default 0,
-  pl_title varchar(255) binary NOT NULL default ''
+  pl_title varchar(191) binary NOT NULL default ''
 ) /*$wgDBTableOptions*/;
 
 CREATE UNIQUE INDEX /*i*/pl_from ON /*_*/pagelinks (pl_from,pl_namespace,pl_title);
@@ -512,7 +512,7 @@ CREATE TABLE /*_*/templatelinks (
   -- and deletions may refer to different page records as time
   -- goes by.
   tl_namespace int NOT NULL default 0,
-  tl_title varchar(255) binary NOT NULL default ''
+  tl_title varchar(191) binary NOT NULL default ''
 ) /*$wgDBTableOptions*/;
 
 CREATE UNIQUE INDEX /*i*/tl_from ON /*_*/templatelinks (tl_from,tl_namespace,tl_title);
@@ -534,7 +534,7 @@ CREATE TABLE /*_*/imagelinks (
   -- Filename of target image.
   -- This is also the page_title of the file's description page;
   -- all such pages are in namespace 6 (NS_FILE).
-  il_to varchar(255) binary NOT NULL default ''
+  il_to varchar(191) binary NOT NULL default ''
 ) /*$wgDBTableOptions*/;
 
 CREATE UNIQUE INDEX /*i*/il_from ON /*_*/imagelinks (il_from,il_to);
@@ -553,7 +553,7 @@ CREATE TABLE /*_*/categorylinks (
   -- Name of the category.
   -- This is also the page_title of the category's description page;
   -- all such pages are in namespace 14 (NS_CATEGORY).
-  cl_to varchar(255) binary NOT NULL default '',
+  cl_to varchar(191) binary NOT NULL default '',
 
   -- A binary string obtained by applying a sortkey generation algorithm
   -- (Collation::getSortKey()) to page_title, or cl_sortkey_prefix . "\n"
@@ -567,7 +567,7 @@ CREATE TABLE /*_*/categorylinks (
   -- collations without reparsing all pages.
   -- Note: If you change the length of this field, you also need to change
   -- code in LinksUpdate.php. See bug 25254.
-  cl_sortkey_prefix varchar(255) binary NOT NULL default '',
+  cl_sortkey_prefix varchar(191) binary NOT NULL default '',
 
   -- This isn't really used at present. Provided for an optional
   -- sorting method by approximate addition time.
@@ -612,7 +612,7 @@ CREATE TABLE /*_*/category (
   -- Name of the category, in the same form as page_title (with underscores).
   -- If there is a category page corresponding to this category, by definition,
   -- it has this name (in the Category namespace).
-  cat_title varchar(255) binary NOT NULL,
+  cat_title varchar(191) binary NOT NULL,
 
   -- The numbers of member pages (including categories and media), subcatego-
   -- ries, and Image: namespace members, respectively.  These are signed to
@@ -672,7 +672,7 @@ CREATE TABLE /*_*/langlinks (
   ll_lang varbinary(20) NOT NULL default '',
 
   -- Title of the target, including namespace
-  ll_title varchar(255) binary NOT NULL default ''
+  ll_title varchar(191) binary NOT NULL default ''
 ) /*$wgDBTableOptions*/;
 
 CREATE UNIQUE INDEX /*i*/ll_from ON /*_*/langlinks (ll_from, ll_lang);
@@ -690,7 +690,7 @@ CREATE TABLE /*_*/iwlinks (
   iwl_prefix varbinary(20) NOT NULL default '',
 
   -- Title of the target, including namespace
-  iwl_title varchar(255) binary NOT NULL default ''
+  iwl_title varchar(191) binary NOT NULL default ''
 ) /*$wgDBTableOptions*/;
 
 CREATE UNIQUE INDEX /*i*/iwl_from ON /*_*/iwlinks (iwl_from, iwl_prefix, iwl_title);
@@ -750,7 +750,7 @@ CREATE TABLE /*_*/ipblocks (
   ipb_by int unsigned NOT NULL default 0,
 
   -- User name of blocker
-  ipb_by_text varchar(255) binary NOT NULL default '',
+  ipb_by_text varchar(191) binary NOT NULL default '',
 
   -- Text comment made by blocker.
   ipb_reason varbinary(767) NOT NULL,
@@ -820,7 +820,7 @@ CREATE TABLE /*_*/image (
   -- Filename.
   -- This is also the title of the associated description page,
   -- which will be in namespace 6 (NS_FILE).
-  img_name varchar(255) binary NOT NULL default '' PRIMARY KEY,
+  img_name varchar(191) binary NOT NULL default '' PRIMARY KEY,
 
   -- File size in bytes.
   img_size int unsigned NOT NULL default 0,
@@ -855,7 +855,7 @@ CREATE TABLE /*_*/image (
 
   -- user_id and user_name of uploader.
   img_user int unsigned NOT NULL default 0,
-  img_user_text varchar(255) binary NOT NULL,
+  img_user_text varchar(191) binary NOT NULL,
 
   -- Time of the upload.
   img_timestamp varbinary(14) NOT NULL default '',
@@ -882,11 +882,11 @@ CREATE INDEX /*i*/img_media_mime ON /*_*/image (img_media_type,img_major_mime,im
 --
 CREATE TABLE /*_*/oldimage (
   -- Base filename: key to image.img_name
-  oi_name varchar(255) binary NOT NULL default '',
+  oi_name varchar(191) binary NOT NULL default '',
 
   -- Filename of the archived file.
   -- This is generally a timestamp and '!' prepended to the base name.
-  oi_archive_name varchar(255) binary NOT NULL default '',
+  oi_archive_name varchar(191) binary NOT NULL default '',
 
   -- Other fields as in image...
   oi_size int unsigned NOT NULL default 0,
@@ -895,7 +895,7 @@ CREATE TABLE /*_*/oldimage (
   oi_bits int NOT NULL default 0,
   oi_description varbinary(767) NOT NULL,
   oi_user int unsigned NOT NULL default 0,
-  oi_user_text varchar(255) binary NOT NULL,
+  oi_user_text varchar(191) binary NOT NULL,
   oi_timestamp binary(14) NOT NULL default '',
 
   oi_metadata mediumblob NOT NULL,
@@ -921,10 +921,10 @@ CREATE TABLE /*_*/filearchive (
   fa_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
 
   -- Original base filename; key to image.img_name, page.page_title, etc
-  fa_name varchar(255) binary NOT NULL default '',
+  fa_name varchar(191) binary NOT NULL default '',
 
   -- Filename of archived file, if an old revision
-  fa_archive_name varchar(255) binary default '',
+  fa_archive_name varchar(191) binary default '',
 
   -- Which storage bin (directory tree or object store) the file data
   -- is stored in. Should be 'deleted' for files that have been deleted;
@@ -954,7 +954,7 @@ CREATE TABLE /*_*/filearchive (
   fa_minor_mime varbinary(100) default "unknown",
   fa_description varbinary(767),
   fa_user int unsigned default 0,
-  fa_user_text varchar(255) binary,
+  fa_user_text varchar(191) binary,
   fa_timestamp binary(14) default '',
 
   -- Visibility of deleted revisions, bitfield
@@ -988,13 +988,13 @@ CREATE TABLE /*_*/uploadstash (
 
   -- file key. this is how applications actually search for the file.
   -- this might go away, or become the primary key.
-  us_key varchar(255) NOT NULL,
+  us_key varchar(191) NOT NULL,
 
   -- the original path
-  us_orig_path varchar(255) NOT NULL,
+  us_orig_path varchar(191) NOT NULL,
 
   -- the temporary path at which the file is actually stored
-  us_path varchar(255) NOT NULL,
+  us_path varchar(191) NOT NULL,
 
   -- which type of upload the file came from (sometimes)
   us_source_type varchar(50),
@@ -1014,7 +1014,7 @@ CREATE TABLE /*_*/uploadstash (
   us_size int unsigned NOT NULL,
   -- this hash comes from FSFile::getSha1Base36(), and is 31 characters
   us_sha1 varchar(31) NOT NULL,
-  us_mime varchar(255),
+  us_mime varchar(191),
   -- Media type as defined by the MEDIATYPE_xxx constants, should duplicate definition in the image table
   us_media_type ENUM("UNKNOWN", "BITMAP", "DRAWING", "AUDIO", "VIDEO", "MULTIMEDIA", "OFFICE", "TEXT", "EXECUTABLE", "ARCHIVE") default NULL,
   -- image-specific properties
@@ -1043,11 +1043,11 @@ CREATE TABLE /*_*/recentchanges (
 
   -- As in revision
   rc_user int unsigned NOT NULL default 0,
-  rc_user_text varchar(255) binary NOT NULL,
+  rc_user_text varchar(191) binary NOT NULL,
 
   -- When pages are renamed, their RC entries do _not_ change.
   rc_namespace int NOT NULL default 0,
-  rc_title varchar(255) binary NOT NULL default '',
+  rc_title varchar(191) binary NOT NULL default '',
 
   -- as in revision...
   rc_comment varbinary(767) NOT NULL default '',
@@ -1124,7 +1124,7 @@ CREATE TABLE /*_*/watchlist (
   -- Note that users may watch pages which do not exist yet,
   -- or existed in the past but have been deleted.
   wl_namespace int NOT NULL default 0,
-  wl_title varchar(255) binary NOT NULL default '',
+  wl_title varchar(191) binary NOT NULL default '',
 
   -- Timestamp used to send notification e-mails and show "updated since last visit" markers on
   -- history and recent changes / watchlist. Set to NULL when the user visits the latest revision
@@ -1151,7 +1151,7 @@ CREATE TABLE /*_*/searchindex (
   si_page int unsigned NOT NULL,
 
   -- Munged version of title
-  si_title varchar(255) NOT NULL default '',
+  si_title varchar(191) NOT NULL default '',
 
   -- Munged version of body text
   si_text mediumtext NOT NULL
@@ -1203,7 +1203,7 @@ CREATE TABLE /*_*/querycache (
 
   -- Target namespace+title
   qc_namespace int NOT NULL default 0,
-  qc_title varchar(255) binary NOT NULL default ''
+  qc_title varchar(191) binary NOT NULL default ''
 ) /*$wgDBTableOptions*/;
 
 CREATE INDEX /*i*/qc_type ON /*_*/querycache (qc_type,qc_value);
@@ -1249,12 +1249,12 @@ CREATE TABLE /*_*/logging (
   log_user int unsigned NOT NULL default 0,
 
   -- Name of the user who performed this action
-  log_user_text varchar(255) binary NOT NULL default '',
+  log_user_text varchar(191) binary NOT NULL default '',
 
   -- Key to the page affected. Where a user is the target,
   -- this will point to the user page.
   log_namespace int NOT NULL default 0,
-  log_title varchar(255) binary NOT NULL default '',
+  log_title varchar(191) binary NOT NULL default '',
   log_page int unsigned NULL,
 
   -- Freeform text. Interpreted as edit history comments.
@@ -1283,7 +1283,7 @@ CREATE TABLE /*_*/log_search (
   -- The type of ID (rev ID, log ID, rev timestamp, username)
   ls_field varbinary(32) NOT NULL,
   -- The value of the ID
-  ls_value varchar(255) NOT NULL,
+  ls_value varchar(191) NOT NULL,
   -- Key to log_id
   ls_log_id int unsigned NOT NULL default 0
 ) /*$wgDBTableOptions*/;
@@ -1302,7 +1302,7 @@ CREATE TABLE /*_*/job (
   -- Namespace and title to act on
   -- Should be 0 and '' if the command does not operate on a title
   job_namespace int NOT NULL,
-  job_title varchar(255) binary NOT NULL,
+  job_title varchar(191) binary NOT NULL,
 
   -- Timestamp of when the job was inserted
   -- NULL for jobs added before addition of the timestamp
@@ -1358,9 +1358,9 @@ CREATE TABLE /*_*/redirect (
   -- and deletions may refer to different page records as time
   -- goes by.
   rd_namespace int NOT NULL default 0,
-  rd_title varchar(255) binary NOT NULL default '',
+  rd_title varchar(191) binary NOT NULL default '',
   rd_interwiki varchar(32) default NULL,
-  rd_fragment varchar(255) binary default NULL
+  rd_fragment varchar(191) binary default NULL
 ) /*$wgDBTableOptions*/;
 
 CREATE INDEX /*i*/rd_ns_title ON /*_*/redirect (rd_namespace,rd_title,rd_from);
@@ -1376,11 +1376,11 @@ CREATE TABLE /*_*/querycachetwo (
 
   -- Target namespace+title
   qcc_namespace int NOT NULL default 0,
-  qcc_title varchar(255) binary NOT NULL default '',
+  qcc_title varchar(191) binary NOT NULL default '',
 
   -- Target namespace+title2
   qcc_namespacetwo int NOT NULL default 0,
-  qcc_titletwo varchar(255) binary NOT NULL default ''
+  qcc_titletwo varchar(191) binary NOT NULL default ''
 ) /*$wgDBTableOptions*/;
 
 CREATE INDEX /*i*/qcc_type ON /*_*/querycachetwo (qcc_type,qcc_value);
@@ -1415,7 +1415,7 @@ CREATE INDEX /*i*/pr_cascade ON /*_*/page_restrictions (pr_cascade);
 -- Protected titles - nonexistent pages that have been protected
 CREATE TABLE /*_*/protected_titles (
   pt_namespace int NOT NULL,
-  pt_title varchar(255) binary NOT NULL,
+  pt_title varchar(191) binary NOT NULL,
   pt_user int unsigned NOT NULL,
   pt_reason varbinary(767),
   pt_timestamp binary(14) NOT NULL,
@@ -1441,7 +1441,7 @@ CREATE UNIQUE INDEX /*i*/pp_propname_sortkey_page ON /*_*/page_props (pp_propnam
 
 -- A table to log updates, one text key row per update.
 CREATE TABLE /*_*/updatelog (
-  ul_key varchar(255) NOT NULL PRIMARY KEY,
+  ul_key varchar(191) NOT NULL PRIMARY KEY,
   ul_value blob
 ) /*$wgDBTableOptions*/;
 
@@ -1455,7 +1455,7 @@ CREATE TABLE /*_*/change_tag (
   -- REVID for the change
   ct_rev_id int NULL,
   -- Tag applied
-  ct_tag varchar(255) NOT NULL,
+  ct_tag varchar(191) NOT NULL,
   -- Parameters for the tag, presently unused
   ct_params blob NULL
 ) /*$wgDBTableOptions*/;
@@ -1486,7 +1486,7 @@ CREATE UNIQUE INDEX /*i*/tag_summary_rev_id ON /*_*/tag_summary (ts_rev_id);
 
 
 CREATE TABLE /*_*/valid_tag (
-  vt_tag varchar(255) NOT NULL PRIMARY KEY
+  vt_tag varchar(191) NOT NULL PRIMARY KEY
 ) /*$wgDBTableOptions*/;
 
 -- Table for storing localisation data
@@ -1494,7 +1494,7 @@ CREATE TABLE /*_*/l10n_cache (
   -- Language code
   lc_lang varbinary(32) NOT NULL,
   -- Cache key
-  lc_key varchar(255) NOT NULL,
+  lc_key varchar(191) NOT NULL,
   -- Value
   lc_value mediumblob NOT NULL
 ) /*$wgDBTableOptions*/;
